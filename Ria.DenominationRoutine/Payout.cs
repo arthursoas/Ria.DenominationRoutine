@@ -4,23 +4,14 @@
     {
         public static ICollection<IDictionary<int, int>> CalculatePayoutPossibilities(ICollection<int> denominations, int amount)
         {
+            denominations = denominations.OrderByDescending(d => d).ToList();
             var possibilities = new List<IDictionary<int, int>>();
-
             var denominationLimits = new Dictionary<int, int>();
             foreach(var denomination in denominations)
             {
                 denominationLimits[denomination] = int.MaxValue;
             }
 
-            return CalculatePayoutPossibilities(amount, possibilities, denominationLimits);
-        }
-
-        private static ICollection<IDictionary<int, int>> CalculatePayoutPossibilities(
-            int amount,
-            ICollection<IDictionary<int, int>> possibilities,
-            IDictionary<int, int> denominationLimits)
-        {
-            var denominations = denominationLimits.Keys.OrderByDescending(d => d);
             var possibility = new Dictionary<int, int>();
             var stop = false;
 
@@ -43,13 +34,13 @@
                 if (rest == 0)
                 {
                     possibilities.Add(new Dictionary<int, int>(possibility));
-                    denominationLimits = possibility;
                 }
+                denominationLimits = possibility;
 
                 // Decrement the limit of the smallest denomination value that still can be used
                 // Ignore the smallest denomination to avoid unnecessary processing
                 var changed = -1;
-                var index = denominations.Count() - 2;
+                var index = denominations.Count - 2;
                 while (changed == -1 && index >= 0)
                 {
                     var denomination = denominations.ElementAt(index);
