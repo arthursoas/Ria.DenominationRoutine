@@ -25,20 +25,22 @@ This solution was created from scracth by [Arthur Soares](https://github.com/art
 
 ### Steps
 
-Calculate the first possibility using the highest denominations available, and then applying a limit usage for each denomination until only the lowerest denomination be available.
+Calculate the first possibility using the highest denominations available, and then apply a limit usage for each denomination until only the lowest denomination is available.
 
-The limit is applied by decrementing the lowerest denomination that was used more than 0 times on the previous step. To avoid unnecessary processing the lowerest denomination of all denominations available is not considered when applying the limits.
-After applied the limit, all denominations with values below the changed one, can be used infinite times.
+The limit is applied by decrementing the lowest denomination used more than 0 times in the previous step. The lowest denomination of all denominations is never decremented to avoid unnecessary processing.
+After applying the limit, all denominations with values below the changed one can be used infinite times.
 
-The initial limit allow infinite use of any denomination.
+If the payout value cannot be reached with the applied limits, the limits are decremented again.
+
+The initial limit allows infinite use of any denomination.
 
 Scenario:
 
 - **Payout**: 100
 - **Denominations**: 10, 50, 100
 
-| Step 1 Limits | Step 1 Result  | Step 2 Limits |
-| ------        | -------------- | ------------- |
-| `100: ∞`      | `100: 1`       | `100: 0`      |
-| `50:  ∞`      | `50:  0`       | `50:  ∞`      |
-| `10:  ∞`      | `10:  0`       | `10:  ∞`      |
+| Step 1 Limits | Step 1 Result  | Step 2 Limits | Step 2 Results | Step 3 Limits | Step 3 Results | Step 4 Limits | Step 4 Result  |
+| ------        | -------------- | ------------- | -------------- | ------------- | -------------- | ------        | -------------- |
+| `100: ∞`      | `100: 1`       | `100: 0`      | `100: 0`       | `100: 0`      | `100: 0`       | `100: 0`      | `100: 0`       |
+| `50:  ∞`      | `50:  0`       | `50:  ∞`      | `50:  2`       | `50:  1`      | `50:  1`       | `50:  0`      | `50:  0`       |
+| `10:  ∞`      | `10:  0`       | `10:  ∞`      | `10:  0`       | `10:  ∞`      | `10:  5`       | `10:  ∞`      | `10:  10`      |
