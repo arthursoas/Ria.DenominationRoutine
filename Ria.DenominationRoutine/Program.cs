@@ -1,10 +1,15 @@
 ﻿using Ria.DenominationRoutine;
-using System.Text.Json;
 
-var denominations = new int[] { 10, 50, 100 };
-var amount = 100;
+var denominations = new[] { 10, 50, 100 };
+var amounts = new[] { 30, 50, 60, 80, 140, 230, 370, 610, 980 };
 
-var a = Payout.CalculatePayoutPossibilities(denominations, amount);
+foreach(var amount in amounts)
+{
+    var combinations = ATM.CalculatePayoutCombinations(denominations, amount);
+    var output = ATM.FormatCombinationsOutput(combinations, "EUR");
 
-Console.WriteLine(JsonSerializer.Serialize(a));
-Console.ReadLine();
+    Console.WriteLine($"============== {amount} ==============");
+    Console.WriteLine(output);
+}
+
+Console.ReadKey();

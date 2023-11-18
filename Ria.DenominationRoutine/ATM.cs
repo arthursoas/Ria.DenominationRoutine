@@ -1,8 +1,8 @@
 ﻿namespace Ria.DenominationRoutine
 {
-    public class Payout
+    public class ATM
     {
-        public static ICollection<IDictionary<int, int>> CalculatePayoutPossibilities(ICollection<int> denominations, int amount)
+        public static ICollection<IDictionary<int, int>> CalculatePayoutCombinations(ICollection<int> denominations, int amount)
         {
             denominations = denominations.OrderByDescending(d => d).ToList();
             var possibilities = new List<IDictionary<int, int>>();
@@ -37,8 +37,8 @@
                 }
                 denominationLimits = possibility;
 
-                // Decrement the limit of the smallest denomination value that still can be used
-                // Ignore the smallest denomination to avoid unnecessary processing
+                // Decrement the limit of the lowest denomination with more than 0 usage
+                // Ignore the lowest denomination to avoid unnecessary processing
                 var changed = -1;
                 var index = denominations.Count - 2;
                 while (changed == -1 && index >= 0)
@@ -58,7 +58,7 @@
                     denominationLimits[denomination] = int.MaxValue;
                 }
 
-                // If some limit was changed, calculate new possibilities
+                // If no limit was changed this round, stop execution
                 if (changed == -1)
                 {
                     stop = true;
@@ -66,6 +66,25 @@
             }
 
             return possibilities;
+        }
+
+        public static string FormatCombinationsOutput(ICollection<IDictionary<int, int>> combinations, string unit)
+        {
+            var output = string.Empty;
+            foreach (var combination in combinations)
+            {
+                foreach (var denomination in combination)
+                {
+                    if (denomination.Value > 0)
+                    {
+                        output += $"{denomination.Value} x {denomination.Key} {unit} + ";
+                    }
+                }
+                output = output.Remove(output.Length - 3);
+                output += "\n";
+            }
+
+            return output;
         }
     }
 }
